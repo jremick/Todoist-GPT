@@ -1,0 +1,330 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Todoist API",
+      "description": "OpenAPI specification for Todoist REST API.",
+      "version": "2.0"
+    },
+    "servers": [
+      {
+        "url": "https://api.todoist.com/rest/v2"
+      }
+    ],
+    "paths": {
+      "/projects/{projectId}": {
+        "get": {
+          "summary": "Get a project",
+          "operationId": "getProject",
+          "parameters": [
+            {
+              "name": "projectId",
+              "in": "path",
+              "required": true,
+              "description": "The ID of the project to retrieve",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A JSON object containing the project",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Update a project",
+          "operationId": "updateProject",
+          "parameters": [
+            {
+              "name": "projectId",
+              "in": "path",
+              "required": true,
+              "description": "The ID of the project to update",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "color": { "type": "string" },
+                    "is_favorite": { "type": "boolean" },
+                    "view_style": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "The updated project",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/projects": {
+        "get": {
+          "summary": "Get all projects",
+          "operationId": "getAllProjects",
+          "responses": {
+            "200": {
+              "description": "A JSON-encoded array containing all user projects",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Project"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new project",
+          "operationId": "createProject",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "parent_id": { "type": "string" },
+                    "color": { "type": "string" },
+                    "is_favorite": { "type": "boolean" },
+                    "view_style": { "type": "string" }
+                  },
+                  "required": ["name"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "The project that was added",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/tasks/{taskId}": {
+        "post": {
+          "summary": "Update a task",
+          "operationId": "updateTask",
+          "parameters": [
+            {
+              "name": "taskId",
+              "in": "path",
+              "required": true,
+              "description": "The ID of the task to update",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": { "type": "string" },
+                    "description": { "type": "string" },
+                    "labels": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "priority": { "type": "integer" },
+                    "due_string": { "type": "string" },
+                    "due_date": { "type": "string" },
+                    "due_datetime": { "type": "string", "format": "date-time" },
+                    "due_lang": { "type": "string" },
+                    "assignee_id": { "type": "string" },
+                    "duration": { "type": "integer" },
+                    "duration_unit": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "The updated task",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/tasks": {
+        "get": {
+          "summary": "Get active tasks",
+          "operationId": "getActiveTasks",
+          "parameters": [
+            { "name": "project_id", "in": "query", "required": false, "schema": { "type": "string" }},
+            { "name": "section_id", "in": "query", "required": false, "schema": { "type": "string" }},
+            { "name": "label", "in": "query", "required": false, "schema": { "type": "string" }},
+            { "name": "filter", "in": "query", "required": false, "schema": { "type": "string" }},
+            { "name": "lang", "in": "query", "required": false, "schema": { "type": "string" }},
+            { "name": "ids", "in": "query", "required": false, "schema": { "type": "array", "items": { "type": "integer" }}}
+          ],
+          "responses": {
+            "200": {
+              "description": "A JSON-encoded array containing all active tasks",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+            "summary": "Create a new task",
+            "operationId": "createTask",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "content": { "type": "string" },
+                      "description": { "type": "string" },
+                      "project_id": { "type": "string" },
+                      "section_id": { "type": "string" },
+                      "parent_id": { "type": "string" },
+                      "order": { "type": "integer" },
+                      "labels": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                      },
+                      "priority": { "type": "integer" },
+                      "due_string": { "type": "string" },
+                      "due_date": { "type": "string" },
+                      "due_datetime": { "type": "string", "format": "date-time" },
+                      "due_lang": { "type": "string" },
+                      "assignee_id": { "type": "string" },
+                      "duration": { "type": "integer" },
+                      "duration_unit": { "type": "string" }
+                    },
+                    "required": ["content"]
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "The newly created task",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "schemas": {
+          "Project": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "comment_count": { "type": "integer" },
+              "color": { "type": "string" },
+              "is_shared": { "type": "boolean" },
+              "order": { "type": "integer" },
+              "is_favorite": { "type": "boolean" },
+              "is_inbox_project": { "type": "boolean" },
+              "is_team_inbox": { "type": "boolean" },
+              "view_style": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "parent_id": { "type": "string" }
+            }
+          },
+        "Task": {
+          "type": "object",
+          "properties": {
+            "creator_id": { "type": "string" },
+            "created_at": { "type": "string", "format": "date-time" },
+            "assignee_id": { "type": "string" },
+            "assigner_id": { "type": "string" },
+            "comment_count": { "type": "integer" },
+            "is_completed": { "type": "boolean" },
+            "content": { "type": "string" },
+            "description": { "type": "string" },
+            "due": {
+              "type": "object",
+              "properties": {
+                "date": { "type": "string" },
+                "is_recurring": { "type": "boolean" },
+                "datetime": { "type": "string", "format": "date-time" },
+                "string": { "type": "string" },
+                "timezone": { "type": "string" }
+              }
+            },
+            "duration": { "type": "string" },
+            "id": { "type": "string" },
+            "labels": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "order": { "type": "integer" },
+            "priority": { "type": "integer" },
+            "project_id": { "type": "string" },
+            "section_id": { "type": "string" },
+            "parent_id": { "type": "string" },
+            "url": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    }
+  }
+  
